@@ -144,7 +144,7 @@ func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	// Optimize memory distribution by reallocating surplus allowance from the
 	// dirty cache to the clean cache.
 	if config.StateScheme == rawdb.PathScheme && config.TrieDirtyCache > pathdb.MaxDirtyBufferSize/1024/1024 {
-		log.Info("Capped dirty cache size", "provided", common.StorageSize(config.TrieDirtyCache)*1024*1024, "adjusted", common.StorageSize(pathdb.MaxDirtyBufferSize))
+		log.Info("Capped dirty cache size", "provided", common.StorageSize(config.TrieDirtyCache)*1024*1024*2, "adjusted", common.StorageSize(pathdb.MaxDirtyBufferSize))
 		oldTrieCleanCache := config.TrieCleanCache
 		config.TrieCleanCache += config.TrieDirtyCache - pathdb.MaxDirtyBufferSize/1024/1024
 		config.TrieDirtyCache = pathdb.MaxDirtyBufferSize / 1024 / 1024
