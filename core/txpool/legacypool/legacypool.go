@@ -619,6 +619,18 @@ func (pool *LegacyPool) local() map[common.Address]types.Transactions {
 	return txs
 }
 
+func (pool *LegacyPool) PendingFrom(addr common.Address) types.Transactions {
+	pool.mu.RLock()
+	defer pool.mu.RUnlock()
+
+	var pending types.Transactions
+	if list, ok := pool.pending[addr]; ok {
+		pending = list.Flatten()
+	}
+
+	return pending
+}
+
 // validateTxBasics checks whether a transaction is valid according to the consensus
 // rules, but does not check state-dependent validation such as sufficient balance.
 // This check is meant as an early check which only needs to be performed once,

@@ -258,6 +258,19 @@ func (p *TxPool) Get(hash common.Hash) *Transaction {
 	return nil
 }
 
+func (p *TxPool) PendingFrom(addr common.Address) types.Transactions {
+
+	pending := p.subpools[0].PendingFrom(addr)
+	for i, subpool := range p.subpools {
+		if i == 0 {
+			continue
+		}
+		pending = append(pending, subpool.PendingFrom(addr)...)
+	}
+
+	return pending
+}
+
 // Add enqueues a batch of transactions into the pool if they are valid. Due
 // to the large transaction churn, add may postpone fully integrating the tx
 // to a later point to batch multiple ones together.
