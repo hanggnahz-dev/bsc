@@ -228,7 +228,7 @@ func (api *MevAPI) commitTransactions(evTxs []*types.Transaction, interrupt *boo
 	return simResults, nil
 }
 
-func commitTransaction(config *params.ChainConfig, bc core.ChainContext, statedb *state.StateDB, header *types.Header, tx *types.Transaction, msg *core.Message, gp *core.GasPool, cfg vm.Config, errRevert bool, bover ethapi.BlockOverrides) (*types.Receipt, error) {
+func commitTransaction(config *params.ChainConfig, bc core.ChainContext, statedb *state.StateDB, header *types.Header, tx *types.Transaction, msg *core.Message, gp *core.GasPool, cfg vm.Config, errRevert bool, bover *ethapi.BlockOverrides) (*types.Receipt, error) {
 	var snap int
 	if errRevert {
 		snap = statedb.Snapshot()
