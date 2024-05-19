@@ -270,7 +270,7 @@ type BundleArgs struct {
 	Txs            []BundleTransaction      `json:"txs"`
 	IgnoreRevert   bool                     `json:"ignoreRevert"`
 	Tracer         *tracers.TraceCallConfig `json:"tracer"`
-	BlockOverrides *ethapi.BlockOverrides   `json:"blockOverrides"`
+	BlockOverrides []ethapi.BlockOverrides  `json:"blockOverrides"`
 }
 
 func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[string]interface{}, error) {
@@ -348,7 +348,7 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 		}
 
 		statedb.SetTxContext(tx.Hash(), txIdx)
-		receipt, err = commitTransaction(chainConfig, api.b.Chain(), statedb, header, tx, msg, gp, vm.Config{Tracer: tracer, NoBaseFee: false}, false, bundle.BlockOverrides)
+		receipt, err = commitTransaction(chainConfig, api.b.Chain(), statedb, header, tx, msg, gp, vm.Config{Tracer: tracer, NoBaseFee: false}, false, bundle.BlockOverrides[txIdx])
 
 		tracerResult, _ := tracer.GetResult()
 		result := map[string]interface{}{
