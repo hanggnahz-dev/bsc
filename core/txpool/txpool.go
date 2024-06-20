@@ -403,7 +403,7 @@ func (p *TxPool) SubscribeTransactions(ch chan<- core.NewTxsEvent, reorgs bool) 
 func (p *TxPool) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) event.Subscription {
 	subs := make([]event.Subscription, 0, len(p.subpools))
 	for _, subpool := range p.subpools {
-		sub := subpool.SubscribeTransactions(ch)
+		sub := subpool.SubscribeTransactions(ch, false)
 		if sub != nil { // sub will be nil when subpool have been shut down
 			subs = append(subs, sub)
 		}
