@@ -61,6 +61,7 @@ import (
 	"github.com/ethereum/go-ethereum/metrics"
 	"github.com/ethereum/go-ethereum/metrics/exp"
 	"github.com/ethereum/go-ethereum/metrics/influxdb"
+	"github.com/ethereum/go-ethereum/mev"
 	"github.com/ethereum/go-ethereum/miner"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/p2p"
@@ -347,6 +348,11 @@ var (
 		Name:     "override.breatheblockinterval",
 		Usage:    "It changes the interval between breathe blocks, only for testing purpose",
 		Value:    params.BreatheBlockInterval,
+		Category: flags.EthCategory,
+	}
+	OverrideFeynmanFix = &cli.Uint64Flag{
+		Name:     "override.feynmanfix",
+		Usage:    "Manually specify the FeynmanFix fork timestamp, overriding the bundled setting",
 		Category: flags.EthCategory,
 	}
 	SyncModeFlag = &flags.TextMarshalerFlag{
@@ -2222,6 +2228,7 @@ func RegisterEthService(stack *node.Node, cfg *ethconfig.Config) (ethapi.Backend
 		Fatalf("Failed to register the Ethereum service: %v", err)
 	}
 	stack.RegisterAPIs(tracers.APIs(backend.APIBackend))
+	stack.RegisterAPIs(mev.APIs(backend.APIBackend))
 	return backend.APIBackend, backend
 }
 

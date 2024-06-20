@@ -1659,6 +1659,10 @@ func (p *BlobPool) ContentFrom(addr common.Address) ([]*types.Transaction, []*ty
 	return []*types.Transaction{}, []*types.Transaction{}
 }
 
+func (pool *BlobPool) PendingFrom(addr common.Address) types.Transactions {
+	return []*types.Transaction{}
+}
+
 // Locals retrieves the accounts currently considered local by the pool.
 //
 // There is no notion of local accounts in the blob pool.
