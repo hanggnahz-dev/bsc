@@ -154,7 +154,7 @@ func NewEVM(blockCtx BlockContext, txCtx TxContext, statedb StateDB, chainConfig
 	// gas prices were specified, lower the basefee to 0 to avoid breaking EVM
 	// invariants (basefee < feecap)
 	if config.NoBaseFee {
-		if txCtx.GasPrice.BitLen() == 0 {
+		if txCtx.GasPrice != nil && txCtx.GasPrice.BitLen() == 0 {
 			blockCtx.BaseFee = new(big.Int)
 		}
 		if txCtx.BlobFeeCap != nil && txCtx.BlobFeeCap.BitLen() == 0 {
