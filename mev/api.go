@@ -42,6 +42,7 @@ import (
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/holiman/uint256"
 )
 
 const (
@@ -240,8 +241,8 @@ func (api *MevAPI) mevTraceTx(ctx context.Context, message *core.Message, txctx 
 	if posa, ok := api.b.Engine().(consensus.PoSA); ok && message.From == vmctx.Coinbase &&
 		posa.IsSystemContract(message.To) && message.GasPrice.Cmp(big.NewInt(0)) == 0 {
 		balance := statedb.GetBalance(consensus.SystemAddress)
-		if balance.Cmp(common.Big0) > 0 {
-			statedb.SetBalance(consensus.SystemAddress, big.NewInt(0))
+		if balance.Cmp(common.U2560) > 0 {
+			statedb.SetBalance(consensus.SystemAddress, uint256.NewInt(0))
 			statedb.AddBalance(vmctx.Coinbase, balance)
 		}
 		intrinsicGas, _ = core.IntrinsicGas(message.Data, message.AccessList, false, true, true, false)
@@ -321,16 +322,15 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 		var msg *core.Message
 
 		if txOrHash.Tx != nil {
-			tx = txOrHash.Tx.ToTransaction()
+			tx = txOrHash.Tx.toTransaction()
 			msg = TransactionToMessageNoSignerCheck(tx, txOrHash.Tx.From)
 
 		} else if txOrHash.TxHash != nil {
-			pooltx := api.b.TxPool().Get(*txOrHash.TxHash)
-			if pooltx == nil {
+			tx := api.b.TxPool().Get(*txOrHash.TxHash)
+			if tx == nil {
 				return nil, fmt.Errorf("Not find pending hash: %s", txOrHash.TxHash.String())
 			}
 
-			tx = pooltx.Tx
 			msg, err = core.TransactionToMessage(tx, signer, header.BaseFee)
 			if err != nil {
 				return nil, fmt.Errorf("Pending Tx to message error: %s, %s", txOrHash.TxHash.String(), err.Error())
