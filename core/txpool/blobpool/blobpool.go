@@ -1525,6 +1525,10 @@ func (p *BlobPool) Pending(filter txpool.PendingFilter) map[common.Address][]*tx
 	return pending
 }
 
+func (pool *BlobPool) PendingFrom(addr common.Address) types.Transactions {
+	return []*types.Transaction{}
+}
+
 // updateStorageMetrics retrieves a bunch of stats from the data store and pushes
 // them out as metrics.
 func (p *BlobPool) updateStorageMetrics() {

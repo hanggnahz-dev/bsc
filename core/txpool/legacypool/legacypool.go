@@ -623,6 +623,18 @@ func (pool *LegacyPool) Pending(filter txpool.PendingFilter) map[common.Address]
 	return pending
 }
 
+func (pool *LegacyPool) PendingFrom(addr common.Address) types.Transactions {
+	pool.mu.RLock()
+	defer pool.mu.RUnlock()
+
+	var pending types.Transactions
+	if list, ok := pool.pending[addr]; ok {
+		pending = list.Flatten()
+	}
+
+	return pending
+}
+
 // Locals retrieves the accounts currently considered local by the pool.
 func (pool *LegacyPool) Locals() []common.Address {
 	pool.mu.Lock()

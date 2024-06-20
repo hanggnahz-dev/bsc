@@ -276,6 +276,19 @@ func (p *TxPool) loop(head *types.Header, chain BlockChain) {
 	errc <- nil
 }
 
+func (p *TxPool) PendingFrom(addr common.Address) types.Transactions {
+
+	pending := p.subpools[0].PendingFrom(addr)
+	for i, subpool := range p.subpools {
+		if i == 0 {
+			continue
+		}
+		pending = append(pending, subpool.PendingFrom(addr)...)
+	}
+
+	return pending
+}
+
 // SetGasTip updates the minimum gas tip required by the transaction pool for a
 // new transaction, and drops all transactions below this threshold.
 func (p *TxPool) SetGasTip(tip *big.Int) {

@@ -98,6 +98,7 @@ func NewPrivateMevAPI(b MevBackend) *MevAPI {
 		stopCh:       make(chan struct{}, 0),
 		accNonceMark: make(map[common.Address]uint64),
 	}
+	log.Info("[MEV] NewPrivateMevAPI")
 
 	go api.searcherLoop()
 
