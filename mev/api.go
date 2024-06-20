@@ -421,7 +421,7 @@ func (s *MevAPI) CallMany(ctx context.Context, txsArgs []ethapi.TransactionArgs,
 			return nil, err
 		}
 		blockCtx := core.NewEVMBlockContext(header, ethapi.NewChainContext(ctx, s.b), nil)
-		evm, vmError := s.b.GetEVM(ctx, msg, state, header, &vm.Config{NoBaseFee: true}, &blockCtx)
+		evm := s.b.GetEVM(ctx, msg, state, header, &vm.Config{NoBaseFee: true}, &blockCtx)
 
 		// Execute the message.
 		gp := new(core.GasPool).AddGas(math.MaxUint64)
