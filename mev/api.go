@@ -322,7 +322,7 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 		var msg *core.Message
 
 		if txOrHash.Tx != nil {
-			tx = txOrHash.Tx.toTransaction()
+			tx = txOrHash.Tx.ToTransaction()
 			msg = TransactionToMessageNoSignerCheck(tx, txOrHash.Tx.From)
 
 		} else if txOrHash.TxHash != nil {
