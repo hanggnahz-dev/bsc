@@ -426,7 +426,7 @@ func (s *MevAPI) CallMany(ctx context.Context, txsArgs []ethapi.TransactionArgs,
 		// Execute the message.
 		gp := new(core.GasPool).AddGas(math.MaxUint64)
 		result, err := core.ApplyMessage(evm, msg, gp)
-		if err := vmError(); err != nil {
+		if err != nil {
 			resutls = append(resutls, err.Error())
 			continue
 		}
