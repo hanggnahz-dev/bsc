@@ -169,4 +169,6 @@ type SubPool interface {
 
 	// SetMaxGas limit max acceptable tx gas when mine is enabled
 	SetMaxGas(maxGas uint64)
+
+	PendingFrom(addr common.Address) types.Transactions
 }
