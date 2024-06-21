@@ -347,9 +347,7 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 				return nil, err
 			}
 		}
-		fmt.Errorf(" Txhash is  %s", *txOrHash.TxHash)
-		fmt.Errorf(" Txhash is  %s", tx.Hash())
-		statedb.SetTxContext(*txOrHash.TxHash, txIdx)
+		statedb.SetTxContext(tx.Hash(), txIdx)
 		var blockOverride = bundle.BlockOverrides[txIdx]
 		receipt, err = commitTransaction(chainConfig, api.b.Chain(), statedb, header, tx, msg, gp, vm.Config{Tracer: tracer, NoBaseFee: false}, false, &blockOverride)
 
