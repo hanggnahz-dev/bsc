@@ -327,8 +327,8 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 
 		} else if txOrHash.TxHash != nil {
 			tx := api.b.TxPool().Get(*txOrHash.TxHash)
-			log.Info("[MEV] txOrHash.TxHash :{}", tx)
-			log.Info("[MEV] txOrHash.TxHash :{}", tx.Hash())
+			log.Info("[MEV] txOrHash.TxHash 1: ", tx, "hash")
+			log.Info("[MEV] txOrHash.TxHash 2: ", tx.Hash(), "hash")
 			if tx == nil {
 				return nil, fmt.Errorf("Not find pending hash: %s", txOrHash.TxHash.String())
 			}
