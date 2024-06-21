@@ -320,15 +320,15 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 	for txIdx, txOrHash := range bundle.Txs {
 		var tx *types.Transaction
 		var msg *core.Message
-		var hash common.Hash
 
 		if txOrHash.Tx != nil {
 			tx = txOrHash.Tx.ToTransaction()
 			msg = TransactionToMessageNoSignerCheck(tx, txOrHash.Tx.From)
-			hash = tx.Hash()
+
 		} else if txOrHash.TxHash != nil {
-			hash = *txOrHash.TxHash
 			tx := api.b.TxPool().Get(*txOrHash.TxHash)
+			log.Info("[MEV] txOrHash.TxHash :{}", tx)
+			log.Info("[MEV] txOrHash.TxHash :{}", tx.Hash())
 			if tx == nil {
 				return nil, fmt.Errorf("Not find pending hash: %s", txOrHash.TxHash.String())
 			}
@@ -349,7 +349,8 @@ func (api *MevAPI) TraceCallBundle(ctx context.Context, bundle BundleArgs) (map[
 				return nil, err
 			}
 		}
-		statedb.SetTxContext(hash, txIdx)
+
+		statedb.SetTxContext(tx.Hash(), txIdx)
 		var blockOverride = bundle.BlockOverrides[txIdx]
 		receipt, err = commitTransaction(chainConfig, api.b.Chain(), statedb, header, tx, msg, gp, vm.Config{Tracer: tracer, NoBaseFee: false}, false, &blockOverride)
 
